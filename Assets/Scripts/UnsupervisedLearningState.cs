@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UnsupervisedLearningState : LearningState
+public class UnsupervisedLearningState : MonoBehaviour
 {
     [SerializeField] private VehicleSpawner vehicleSpawner;
     [SerializeField] private AiDriver aiDriver;
@@ -17,17 +17,46 @@ public class UnsupervisedLearningState : LearningState
     private float lastSpawnTime = 0f;
     private GeneticAlgorithm geneticAlgorithm;
 
-    public void Initialize(ICollection<Individual> individuals)
+    private void Awake()
     {
-        geneticAlgorithm = new GeneticAlgorithm(individuals);
+        enabled = false;
+        AppManager.Instance.Events.OnTrainingStarted.AddListener(StartTraining);
     }
 
-    public override void OnStateEnter()
+    private void StartTraining()
     {
+        Debug.Log("Starting training");
+        enabled = true;
+        var individuals = CreateInitialPopulation(100, new MlModel().GetParameters().Length);
+        
         FillQueue();
     }
 
-    public override void OnStateUpdate()
+    private List<Individual> CreateInitialPopulation(int populationSize, int dnaLength)
+    {
+        var population = new List<Individual>(populationSize);
+        for (int i = 0; i < populationSize; i++)
+        {
+            var dna = CreateRandomDna(dnaLength);
+            var individual = new Individual(0, dna);
+            population.Add(individual);
+        }
+
+        return population;
+    }
+
+    private float[] CreateRandomDna(int dnaLenght)
+    {
+        var dna = new float[dnaLenght];
+        for (int i = 0; i < dnaLenght; i++)
+        {
+            dna[i] = Random.Range(-1f, 1f);
+        }
+
+        return dna;
+    }
+
+    public void Update()
     {
         if (testingQueue.Count > 0 && agents.Count < maxVehicles && Time.time - lastSpawnTime > spawnInterval)
         {

@@ -9,12 +9,11 @@ public class MlModel
 
     public MlModel()
     {
+        var initializer = NN.Initializers.Uniform();
         neuralNetwork = NN.Models.Layered(32,
-            NN.Layers.Dense(64, activation: NN.Activations.Relu()),
-            NN.Layers.Dense(32, activation: NN.Activations.Relu()),
-            NN.Layers.Dense(16, activation: NN.Activations.Relu()),
-            NN.Layers.Dense(16, activation: NN.Activations.Relu()),
-            NN.Layers.Dense(3, activation: NN.Activations.Linear()));
+            NN.Layers.Dense(64, activation: NN.Activations.Relu(), biasInitializer: initializer, kernelInitializer: initializer),
+            NN.Layers.Dense(16, activation: NN.Activations.Relu(), biasInitializer: initializer, kernelInitializer: initializer),
+            NN.Layers.Dense(3, activation: NN.Activations.Linear(), biasInitializer: initializer, kernelInitializer: initializer));
     }
 
     public void SetParameters(float[] parameters)

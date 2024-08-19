@@ -164,12 +164,8 @@ GameObject:
   m_Component:
   - component: {fileID: 232140141}
   - component: {fileID: 232140142}
-  - component: {fileID: 232140143}
-  - component: {fileID: 232140144}
-  - component: {fileID: 232140145}
-  - component: {fileID: 232140146}
   m_Layer: 0
-  m_Name: Learn Scene Manager
+  m_Name: Scene Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,72 +198,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff19be4e2723f4e41b21e79e0b71b3f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startState: {fileID: 232140143}
---- !u!114 &232140143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 232140140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaafc15fef352c84d95419a98c1da32b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  paralellEpisodes: 20
+  episodeStartInterval: 0.5
   vehicleSpawner: {fileID: 1525579188}
-  racetrack: {fileID: 1216319723}
-  referenceDriverPrefab: {fileID: 9097124063466830064, guid: 21f770a0eeaaad84e8374219a8f8dc65, type: 3}
-  followCamera: {fileID: 963194229}
-  trainingState: {fileID: 232140144}
-  referenceRun: {fileID: 232140145}
---- !u!114 &232140144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 232140140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc50fc33e37c5ba4ba16f307fa158317, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unsupervisedLearningState: {fileID: 232140146}
-  referenceRun: {fileID: 232140145}
-  windowPrefab: {fileID: 6012464432600742043, guid: 32c150012c4e2f1469e78d7dd948e48a, type: 3}
-  maxGenerations: 100000
-  clusterThreshold: -1000
---- !u!114 &232140145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 232140140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2f78442f42898458944abd1ad90e06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &232140146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 232140140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db7f33dd48f54b341982da13b5ded6c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vehicleSpawner: {fileID: 1525579188}
-  aiDriver: {fileID: 2901161487389567120, guid: 5ebabd6ee1668d14f81ca839496b18e9, type: 3}
+  aiDriverPrefab: {fileID: 2901161487389567120, guid: 5ebabd6ee1668d14f81ca839496b18e9, type: 3}
   racetrack: {fileID: 1216319723}
   followCamera: {fileID: 963194229}
-  spawnInterval: 1
-  maxVehicles: 6
 --- !u!1 &693073174
 GameObject:
   m_ObjectHideFlags: 0
