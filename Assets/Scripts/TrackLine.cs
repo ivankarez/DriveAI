@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TrackLine
+public class TrackLineOld
 {
     public Vector3[] Line { get; private set; }
     public float[] Angles { get; private set; }
@@ -9,7 +9,7 @@ public class TrackLine
     public Signal<Vector3> CurrentPoint { get; private set; }
     public Signal<Vector3> VehiclePosition { get; set; }
 
-    public TrackLine(Vector3[] line, Vector3 initialPosition)
+    public TrackLineOld(Vector3[] line, Vector3 initialPosition)
     {
         Line = line;
         VehiclePosition = new Signal<Vector3>(initialPosition);

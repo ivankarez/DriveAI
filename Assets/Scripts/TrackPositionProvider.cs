@@ -4,7 +4,7 @@ public class TrackPositionProvider : MonoBehaviour
 {
     private Transform trackedTransform = null;
 
-    private TrackLine centerLine;
+    private TrackLineOld centerLine;
 
     public Signal<int> CurrentTrackPosition { get; private set; }
 
@@ -12,7 +12,7 @@ public class TrackPositionProvider : MonoBehaviour
     {
         this.trackedTransform = trackedTransform;
 
-        centerLine = new TrackLine(racetrack.TrackData.centerLine, trackedTransform.position);
+        centerLine = new TrackLineOld(racetrack.TrackData.centerLine, trackedTransform.position);
         CurrentTrackPosition = centerLine.CurrentIndex;
     }
 

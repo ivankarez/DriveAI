@@ -29,6 +29,17 @@ public class StaticThirdPersonFollow : MonoBehaviour
 
     public void SetTarget(Transform target)
     {
+        if (target == this.target)
+        {
+            return;
+        }
+
+        if (target == null)
+        {
+            this.target = null;
+            return;
+        }
+
         transform.position = target.position - target.forward * followOffset.z + target.up * followOffset.y;
         transform.LookAt(target.position + lookOffset);
         this.target = target;

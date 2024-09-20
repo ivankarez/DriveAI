@@ -8,7 +8,7 @@ public class ObservationsCollector : MonoBehaviour
 
     [SerializeField] private int lookAhead = 30;
 
-    public TrackLine RacingLine { get; private set; }
+    public TrackLineOld RacingLine { get; private set; }
     public List<Vector3> Waypoints { get; private set; }
     public List<float> WaypointAngles { get; private set; }
     public float WaypointAngle { get; private set; }
@@ -18,7 +18,7 @@ public class ObservationsCollector : MonoBehaviour
     {
         this.vehicle = vehicle;
         this.racetrack = racetrack;
-        RacingLine = new TrackLine(this.racetrack.TrackData.racingLine, vehicle.nose.transform.position);
+        RacingLine = new TrackLineOld(this.racetrack.TrackData.racingLine, vehicle.nose.transform.position);
         Waypoints = new List<Vector3>(lookAhead);
         WaypointAngles = new List<float>(lookAhead);
     }
