@@ -9,19 +9,18 @@ public class Racetrack : MonoBehaviour
     [SerializeField] private int sector2StartIndex;
     [SerializeField] private int sector3StartIndex;
 
-    public Vector3 GetSpawnPosition()
+    private void Awake()
     {
-        return trackData.racingLine.CircularIndex(spawnIndex);
+        RacingLine = new TrackLine(trackData.racingLine);
+        CenterLine = new TrackLine(trackData.centerLine);
     }
 
     public void MoveToStart(Transform transform)
     {
-        var position = GetSpawnPosition();
+        var spawnIndex = Random.Range(0, trackData.racingLine.Length);
+        var position = trackData.racingLine.CircularIndex(spawnIndex);
         var rotation = Quaternion.LookRotation(trackData.racingLine.CircularIndex(spawnIndex + 1) - position);
         transform.SetPositionAndRotation(position, rotation);
-
-        RacingLine = new TrackLine(trackData.racingLine);
-        CenterLine = new TrackLine(trackData.centerLine);
     }
 
     public TrackData TrackData => trackData;
@@ -58,10 +57,11 @@ public class TrackLine
 
         for (var i = 0; i < points.Length; i++)
         {
-            var distance = DistanceFromLinePoint(i, position);
-            if (distance < 0 && -distance < closestDistance) // Only consider points before the vehicle
+            var lineDistance = DistanceFromLinePoint(i, position);
+            var distance = Vector3.Distance(points.CircularIndex(i), position);
+            if (distance < 10 && lineDistance < 0 && -lineDistance < closestDistance) // Only consider points before the vehicle
             {
-                closestDistance = distance;
+                closestDistance = lineDistance;
                 closestPoint = i;
             }
         }

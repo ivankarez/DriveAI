@@ -203,6 +203,9 @@ namespace Ivankarez.DriveAI
             Gizmos.DrawSphere(racetrack.RacingLine.GetPoint(racingLinePositionIndex), 0.1f);
             Gizmos.color = Color.white;
             Gizmos.DrawSphere(racetrack.CenterLine.GetPoint(centerLinePositionIndex), 0.1f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, racetrack.CenterLine.GetPoint(centerLinePositionIndex));
+            Gizmos.DrawLine(transform.position, racetrack.RacingLine.GetPoint(racingLinePositionIndex));
         }
     }
 }
