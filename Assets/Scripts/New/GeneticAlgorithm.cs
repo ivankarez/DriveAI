@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +12,7 @@ namespace Ivankarez.DriveAI
         [SerializeField] private int populationSize = 10;
         [SerializeField] private int paralelEpisodes = 3;
         [SerializeField] private Agent agentPrefab = null;
+        [SerializeField] private string runName = "";
 
         private readonly TournamentSelection selection = new(3, 0.5f);
         private readonly Reproduction reproduction = new(0.03f, 0.05f);
@@ -17,16 +20,27 @@ namespace Ivankarez.DriveAI
         private readonly Queue<Entity> episodeQueue = new();
         private readonly List<Agent> agents = new();
         private ulong generation = 0;
+        private float runtime = 0f;
+        private Entity bestEntity;
 
         private void Start()
         {
-            var rootFolder = Path.Combine(Application.persistentDataPath, "GeneticAlgortihm");
-            if (!Directory.Exists(rootFolder))
+            if (runName == "")
+            {
+                enabled = false;
+                throw new InvalidOperationException("Run name is not set");
+            }
+
+            var rootFolder = GetStoragePath("/");
+            Debug.Log($"Storage path: {rootFolder}");
+            if (Directory.Exists(rootFolder))
+            {
+                Load();
+            }
+            else
             {
                 Directory.CreateDirectory(rootFolder);
             }
-
-            Load();
 
             if (population.Count == 0)
             {
@@ -56,11 +70,25 @@ namespace Ivankarez.DriveAI
                 }
                 else if (agents.Count == 0)
                 {
-                    Debug.Log($"All episodes finished in generation {generation}. Best fitness {population.Max(e => e.Fitness)} / Average fitness: {population.Average(e => e.Fitness):f2}");
+                    var genBest = population.OrderByDescending(e => e.Fitness).First();
+                    var newBest = false;
+                    if (bestEntity == null || genBest.Fitness > bestEntity.Fitness)
+                    {
+                        bestEntity = genBest;
+                        newBest = true;
+                    }
+
+                    var bestFitness = genBest.Fitness;
+                    var averageFitness = population.Average(e => e.Fitness);
+                    int runtimeHours = (int)(runtime / 60 / 60);
+                    int runtimeMinutes = (int)(runtime / 60) % 60;
+                    Debug.Log($"[SUMMARY] Generation:{generation}, Best:{bestFitness:f2}{(newBest ? " (AT)" : "")}, Average:{averageFitness:f2}, Runtime:{runtimeHours:d2}:{runtimeMinutes:d2}");
                     Save();
                     CreateNextGeneration();
                 }
             }
+
+            runtime += Time.deltaTime;
         }
 
         private void CreateNextGeneration()
@@ -86,39 +114,51 @@ namespace Ivankarez.DriveAI
 
         private void Save()
         {
-            var csvFile = Path.Combine(Application.persistentDataPath, "fitness.txt");
+            // Write performance CSV
+            var csvFile = GetStoragePath("fitness.csv");
             using var writer = new StreamWriter(csvFile, true);
+            writer.WriteLine($"{generation},{runtime},{population.Max(i => i.Fitness)},{population.Average(i => i.Fitness)}");
 
-            var rootFolder = Path.Join(Application.persistentDataPath, "GeneticAlgortihm");
-            writer.WriteLine($"{generation};{population.Max(i => i.Fitness)};{population.Average(i => i.Fitness)}");
-
-            foreach (var filePath in Directory.GetFiles(rootFolder))
-            {
-                File.Delete(filePath);
-            }
-
+            // Write population
+            var rootFolder = GetStoragePath("population.bin");
+            using var binaryWriter = new BinaryWriter(File.Open(rootFolder, FileMode.Create));
+            binaryWriter.Write(population.Count);
             foreach (var entity in population)
             {
-                var filePath = Path.Join(rootFolder, $"entity_{entity.Id}.bin");
-                using var binaryWriter = new BinaryWriter(File.Open(filePath, FileMode.Create));
                 entity.Serialize(binaryWriter);
             }
+
+            // Write genetic algortihm state
+            var stateFile = GetStoragePath("state.bin");
+            using var stateWriter = new BinaryWriter(File.Open(stateFile, FileMode.Create));
+            stateWriter.Write(generation);
+            stateWriter.Write(runtime);
+            bestEntity.Serialize(stateWriter);
         }
 
         private void Load()
         {
-            var rootFolder = Path.Join(Application.persistentDataPath, "GeneticAlgortihm");
-            if (!Directory.Exists(rootFolder))
+            // Read population
+            var populationFile = GetStoragePath("population.bin");
+            using var binaryReader = new BinaryReader(File.Open(populationFile, FileMode.Open));
+            var populationSize = binaryReader.ReadInt32();
+            for (int i = 0; i < populationSize; i++)
             {
-                return;
-            }
-
-            foreach (var filePath in Directory.GetFiles(rootFolder))
-            {
-                using var binaryReader = new BinaryReader(File.Open(filePath, FileMode.Open));
                 var entity = Entity.Deserialize(binaryReader);
                 population.Add(entity);
             }
+
+            // Read genetic algortihm state
+            var stateFile = GetStoragePath("state.bin");
+            using var stateReader = new BinaryReader(File.Open(stateFile, FileMode.Open));
+            generation = stateReader.ReadUInt64();
+            runtime = stateReader.ReadSingle();
+            bestEntity = Entity.Deserialize(stateReader);
+        }
+
+        private string GetStoragePath(string path)
+        {
+            return Path.Join(Application.persistentDataPath, runName, path);
         }
     }
 }
