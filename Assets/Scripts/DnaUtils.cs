@@ -1,4 +1,4 @@
-﻿using Ivankarez.NeuralNetworks;
+using Ivankarez.NeuralNetworks;
 using Ivankarez.NeuralNetworks.Api;
 
 namespace Ivankarez.DriveAI
@@ -23,12 +23,10 @@ namespace Ivankarez.DriveAI
         private static LayeredNetworkModel CreateNewModel()
         {
             return NN.Models.Layered(InputSize,
-                NN.Layers.GRU(NN.Size.Of(128)),
-                NN.Layers.Dropout(0.2f),
-                NN.Layers.GRU(NN.Size.Of(64)),
-                NN.Layers.Dropout(0.2f),
-                NN.Layers.Dense(64, activation: NN.Activations.Relu()),
-                NN.Layers.Dense(32, activation: NN.Activations.Relu()),
+                NN.Layers.GRU(NN.Size.Of(32)),
+                NN.Layers.Dense(16, activation: NN.Activations.Relu()),
+                NN.Layers.Dense(16, activation: NN.Activations.Relu()),
+                NN.Layers.Dense(8, activation: NN.Activations.Relu()),
                 NN.Layers.Dense(OutputSize, activation: NN.Activations.Tanh()));
         }
     }
