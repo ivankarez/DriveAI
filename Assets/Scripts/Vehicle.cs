@@ -10,10 +10,16 @@ namespace Ivankarez.DriveAI
         [SerializeField] private float brakeTorque = 1000f;
         [SerializeField] private WheelCollider[] wheelColliders = new WheelCollider[4];
         [SerializeField] private Transform[] wheelMeshes = new Transform[4];
+        [SerializeField] private MeshRenderer chassisRenderer;
         public Transform nose;
         public float maxSteerAngle = 15f;
         public AnimationCurve downforceBySpeed;
         public float maxSpeed = 340f;
+        public Color ChassisColor
+        {
+            get => chassisMaterial.color;
+            set => chassisMaterial.color = value;
+        }
 
         public readonly WheelHit?[] wheelHits = new WheelHit?[4];
         public readonly bool[] isAbsActive = new bool[4];
@@ -22,9 +28,15 @@ namespace Ivankarez.DriveAI
         [HideInInspector] public float speed = 0f;
         [HideInInspector] public float downforce = 0f;
 
+        private Material chassisMaterial;
         private float steering = 0f;
         private float throttle = 0f;
         private float brake = 0f;
+
+        private void Awake()
+        {
+            chassisMaterial = chassisRenderer.materials[0];
+        }
 
         private void Start()
         {

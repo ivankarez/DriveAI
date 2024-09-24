@@ -634,6 +634,7 @@ MonoBehaviour:
   - {fileID: 2634190064150027964}
   - {fileID: 2080055355742940326}
   - {fileID: 5841441716420266293}
+  chassisRenderer: {fileID: 43792590294358918}
   nose: {fileID: 9127363286988192695}
   maxSteerAngle: 15
   downforceBySpeed:
@@ -817,6 +818,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad06e021aa9303041b2532fef3cbb420, type: 3}
+--- !u!23 &43792590294358918 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3401919043088636557, guid: ad06e021aa9303041b2532fef3cbb420, type: 3}
+  m_PrefabInstance: {fileID: 3435576331296129291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2080055355742940326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5516829090846233171, guid: ad06e021aa9303041b2532fef3cbb420, type: 3}

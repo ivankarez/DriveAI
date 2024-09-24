@@ -1,4 +1,4 @@
-﻿using Ivankarez.NeuralNetworks;
+using Ivankarez.NeuralNetworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +35,7 @@ namespace Ivankarez.DriveAI
         public float CheckpointsReached { get; private set; }
         public float DistnaceTravelled { get; private set; }
         public float Speed => vehicle.speed;
+        public Vehicle Vehicle => vehicle;
 
         private void Awake()
         {

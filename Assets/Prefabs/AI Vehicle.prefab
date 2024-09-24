@@ -77,6 +77,9 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &3401301621637681481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -85,6 +88,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 43792590294358918, guid: 5406b5f495579994f894b77ccf8c157b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a1febc329a9e1d4488c58513ef84f418, type: 2}
     - target: {fileID: 7587385664609198059, guid: 5406b5f495579994f894b77ccf8c157b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 84.56
@@ -127,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8326995538887457219, guid: 5406b5f495579994f894b77ccf8c157b, type: 3}
       propertyPath: m_Name
-      value: AI Vehicle Variant
+      value: AI Vehicle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
