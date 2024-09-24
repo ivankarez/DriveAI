@@ -86,16 +86,7 @@ namespace Ivankarez.DriveAI
         private float CalculateFitness()
         {
             var checkpoints = fullAiVehicleController.CheckpointsReached;
-            if (checkpoints < 500)
-            {
-                return checkpoints;
-            }
-
-
-            var distance = fullAiVehicleController.DistnaceTravelled;
-            var avgSpeed = distance / runtime;
-
-            return checkpoints + (avgSpeed * 500);
+            return checkpoints;
         }
     }
 }
