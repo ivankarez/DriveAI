@@ -1,4 +1,4 @@
-using Ivankarez.NeuralNetworks;
+﻿using Ivankarez.NeuralNetworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace Ivankarez.DriveAI
 
         private void Start()
         {
-            lidar.RaysCount = DnaUtils.InputSize - 4;
+            lidar.RaysCount = DnaUtils.InputSize - 6;
             inputs = new float[DnaUtils.InputSize];
         }
 
@@ -109,8 +109,10 @@ namespace Ivankarez.DriveAI
 
             var distFromRacingLine = DistanceFromTrackLine(racetrack.RacingLine, racingLinePositionIndex);
             var distFromCenterLine = DistanceFromTrackLine(racetrack.CenterLine, centerLinePositionIndex);
+            inputs[^6] = AngleFromTrackLine(racetrack.RacingLine, racingLinePositionIndex) / 20f;
+            inputs[^5] = AngleFromTrackLine(racetrack.CenterLine, centerLinePositionIndex) / 20f;
             inputs[^4] = vehicle.speed / 100f;
-            inputs[^3] = curvature / 90f;
+            inputs[^3] = curvature / (180 / lookAhead);
             inputs[^2] = distFromRacingLine / 6;
             inputs[^1] = distFromCenterLine / 6;
 
@@ -194,6 +196,14 @@ namespace Ivankarez.DriveAI
             var position2D = new Vector2(vehicle.transform.position.x, vehicle.transform.position.z);
 
             return AdvMath.DistanceFromPointToLine2D(prevPoint2D, currentPoint2D, position2D);
+        }
+
+        private float AngleFromTrackLine(TrackLine line, int currentIndex)
+        {
+            var currentPoint = line.GetPoint(currentIndex);
+            var prevPoint = line.GetPoint(currentIndex - 1);
+
+            return Vector3.SignedAngle(currentPoint - prevPoint, transform.forward, Vector3.up);
         }
 
         private float CalculateTrackCurvature()

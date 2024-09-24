@@ -854,7 +854,7 @@ MonoBehaviour:
   populationSize: 100
   paralelEpisodes: 34
   agentPrefab: {fileID: 8581068716817236038, guid: ed51ae7f2901853488898f2f2d441572, type: 3}
-  runName: test
+  runName: test-gru
 --- !u!1 &1912931467
 GameObject:
   m_ObjectHideFlags: 0

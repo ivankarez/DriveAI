@@ -1,11 +1,11 @@
-using Ivankarez.NeuralNetworks;
+﻿using Ivankarez.NeuralNetworks;
 using Ivankarez.NeuralNetworks.Api;
 
 namespace Ivankarez.DriveAI
 {
     public static class DnaUtils
     {
-        public const int InputSize = 11 + 4;
+        public const int InputSize = 11 + 6;
         public const int OutputSize = 2;
 
         public static float[] CreateNewDna()
