@@ -31,6 +31,7 @@ namespace Ivankarez.DriveAI
         private int currentLookAhead;
         private float curvature;
         private Vector3 lastPosition;
+        private float timeOffRoad = 0f;
 
         public float CheckpointsReached { get; private set; }
         public float DistnaceTravelled { get; private set; }
@@ -152,6 +153,15 @@ namespace Ivankarez.DriveAI
         private void CheckTrackLeft()
         {
             if (vehicle.wheelHits.All((hit) => !IsOnTrack(hit)))
+            {
+                timeOffRoad += Time.deltaTime;
+            }
+            else
+            {
+                timeOffRoad = 0f;
+            }
+
+            if (timeOffRoad > 1f)
             {
                 onTrackLeft?.Invoke();
                 vehicle.SetInputs(0, 0, 1f);
