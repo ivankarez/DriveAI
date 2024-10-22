@@ -24,7 +24,7 @@ namespace Ivankarez.DriveAI
         {
             if (agents.Count == 0)
             {
-                followCamera.SetTarget(null);
+                ClearFollowedAgent();
                 followedAgent = null;
                 return;
             }
@@ -44,9 +44,20 @@ namespace Ivankarez.DriveAI
 
             if (followedAgent == null || followedAgent != agents[0])
             {
+                ClearFollowedAgent();
                 followedAgent = agents[0];
+                followedAgent.IsInFocus = true;
                 followCamera.SetTarget(followedAgent.AiVehicleController.transform);
             }
+        }
+
+        private void ClearFollowedAgent()
+        {
+            if (followedAgent == null) return;
+
+            followCamera.SetTarget(null);
+            followedAgent.IsInFocus = false;
+            followedAgent = null;
         }
     }
 }

@@ -37,6 +37,7 @@ namespace Ivankarez.DriveAI
         public float DistnaceTravelled { get; private set; }
         public float Speed => vehicle.speed;
         public Vehicle Vehicle => vehicle;
+        public bool ShowGizmos { get; set; } = false;
 
         private void Awake()
         {
@@ -219,6 +220,8 @@ namespace Ivankarez.DriveAI
 
         private void OnDrawGizmos()
         {
+            if (!ShowGizmos) return;
+
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(racetrack.RacingLine.GetPoint(racingLinePositionIndex), 0.1f);
             Gizmos.color = Color.white;

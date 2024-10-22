@@ -9,6 +9,8 @@ namespace Ivankarez.DriveAI
         private Entity entity;
         private Action<Agent> episodeEndCallback;
         private float runtime = 0f;
+        private bool isInFocus = false;
+        private float fitnessPenalty = 0f;
         [SerializeField] private AiVehicleController fullAiVehicleController;
 
         public Entity Entity
@@ -26,6 +28,15 @@ namespace Ivankarez.DriveAI
         public bool IsInitialized { get; private set; } = false;
         public float Fitness { get; private set; }
         public AiVehicleController AiVehicleController => fullAiVehicleController;
+        public bool IsInFocus
+        {
+            get => isInFocus;
+            set
+            {
+                isInFocus = value;
+                fullAiVehicleController.ShowGizmos = isInFocus;
+            }
+        }
 
         public void Initialize(Entity entity, Action<Agent> episodeEndCallback)
         {
@@ -43,7 +54,7 @@ namespace Ivankarez.DriveAI
             IsInitialized = true;
             var raceTrack = FindObjectOfType<Racetrack>();
             raceTrack.MoveToStart(transform);
-            fullAiVehicleController.Initialize(DnaUtils.CreateNeuralNetwork(entity.Dna.ToArray()), EndEpisode);
+            fullAiVehicleController.Initialize(DnaUtils.CreateNeuralNetwork(entity.Dna.ToArray()), OnTrackLeft);
             runtime = 0f;
 
             FindObjectOfType<CameraController>().RegisterAgent(this);
@@ -58,7 +69,7 @@ namespace Ivankarez.DriveAI
             {
                 EndEpisode();
             }
-            if (fullAiVehicleController.CheckpointsReached > 2000)
+            if (runtime > 10 * 60 * 60)
             {
                 EndEpisode();
             }
@@ -76,16 +87,22 @@ namespace Ivankarez.DriveAI
             }
         }
 
+        private void OnTrackLeft()
+        {
+            fitnessPenalty = 100f;
+            EndEpisode();
+        }
+
         private void EndEpisode()
         {
-            entity.Fitness = Fitness;
+            entity.Fitness = CalculateFitness();
             FindObjectOfType<CameraController>().UnregisterAgent(this);
             episodeEndCallback(this);
         }
 
         private float CalculateFitness()
         {
-            var checkpoints = fullAiVehicleController.CheckpointsReached;
+            var checkpoints = fullAiVehicleController.CheckpointsReached - fitnessPenalty;
             return checkpoints;
         }
     }
