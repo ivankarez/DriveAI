@@ -19,7 +19,7 @@ namespace Ivankarez.DriveAI
 
         public void MoveToStart(Transform transform)
         {
-            var spawnIndex = Random.Range(0, trackData.racingLine.Length);
+            var spawnIndex = 0; // Random.Range(0, trackData.racingLine.Length); // Enable for random spawn
             var position = trackData.racingLine.CircularIndex(spawnIndex);
             var rotation = Quaternion.LookRotation(trackData.racingLine.CircularIndex(spawnIndex + 1) - position);
             transform.SetPositionAndRotation(position, rotation);

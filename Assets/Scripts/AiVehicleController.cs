@@ -18,8 +18,6 @@ namespace Ivankarez.DriveAI
         [SerializeField] private Lidar lidar;
         [SerializeField] private Vehicle vehicle;
         [SerializeField] private LayerMask racetrackLayer;
-        [SerializeField] private bool isAiSteering;
-        [SerializeField] private bool isAiThrottle;
         [SerializeField] private int lookAhead = 30;
         [SerializeField] private float caution = 15f;
         [SerializeField] private AnimationCurve cautionOverSpeed;
@@ -35,6 +33,7 @@ namespace Ivankarez.DriveAI
 
         public float CheckpointsReached { get; private set; }
         public float DistnaceTravelled { get; private set; }
+        public float Error { get; set; } = 0f;
         public float Speed => vehicle.speed;
         public Vehicle Vehicle => vehicle;
         public bool ShowGizmos { get; set; } = false;
@@ -126,20 +125,16 @@ namespace Ivankarez.DriveAI
 
         private void UpdateAlgorithmicDriving()
         {
-            if (!isAiSteering)
-            {
-                var dirToRacingLine = racetrack.RacingLine.GetPoint(racingLinePositionIndex) - vehicle.transform.position;
-                var vehicleAngleToTrack = Vector3.SignedAngle(vehicle.transform.forward, dirToRacingLine, Vector3.up);
-                steering = Mathf.Clamp(vehicleAngleToTrack / vehicle.maxSteerAngle, -1, 1);
-            }
+            var dirToRacingLine = racetrack.RacingLine.GetPoint(racingLinePositionIndex) - vehicle.transform.position;
+            var vehicleAngleToTrack = Vector3.SignedAngle(vehicle.transform.forward, dirToRacingLine, Vector3.up);
+            var algoSteering = Mathf.Clamp(vehicleAngleToTrack / vehicle.maxSteerAngle, -1, 1);
 
-            if (!isAiThrottle)
-            {
-                var suggestedSpeed = CalculateSuggestedSpeed();
-                var relativeSpeed = suggestedSpeed - vehicle.speed;
-                throttle = relativeSpeed > 0f ? 1f : 0f;
-                brake = relativeSpeed < 0f ? Mathf.Clamp(Mathf.Abs(relativeSpeed) / 1f, .3f, 1f) : 0f;
-            }
+            var suggestedSpeed = CalculateSuggestedSpeed();
+            var relativeSpeed = suggestedSpeed - vehicle.speed;
+            var algoThrottle = relativeSpeed > 0f ? 1f : 0f;
+            var algoBrake = relativeSpeed < 0f ? Mathf.Clamp(Mathf.Abs(relativeSpeed) / 1f, .3f, 1f) : 0f;
+
+            Error += (Mathf.Pow(steering - algoSteering, 2) + Mathf.Pow(throttle - algoThrottle, 2) + Mathf.Pow(brake - algoBrake, 2) * Time.deltaTime);
         }
 
         private float CalculateSuggestedSpeed()

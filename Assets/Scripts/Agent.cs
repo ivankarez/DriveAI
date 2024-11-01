@@ -9,6 +9,7 @@ namespace Ivankarez.DriveAI
         private Entity entity;
         private Action<Agent> episodeEndCallback;
         private float runtime = 0f;
+        private long updates = 0;
         private bool isInFocus = false;
         private float fitnessPenalty = 0f;
         [SerializeField] private AiVehicleController fullAiVehicleController;
@@ -63,6 +64,7 @@ namespace Ivankarez.DriveAI
         private void Update()
         {
             runtime += Time.deltaTime;
+            updates++;
             Fitness = CalculateFitness();
 
             if (runtime > 10 + (fullAiVehicleController.CheckpointsReached * 0.5f))
@@ -89,7 +91,7 @@ namespace Ivankarez.DriveAI
 
         private void OnTrackLeft()
         {
-            fitnessPenalty = 100f;
+            fitnessPenalty += 10f;
             EndEpisode();
         }
 
@@ -102,8 +104,12 @@ namespace Ivankarez.DriveAI
 
         private float CalculateFitness()
         {
-            var checkpoints = fullAiVehicleController.CheckpointsReached - fitnessPenalty;
-            return checkpoints;
+            var checkpoints = fullAiVehicleController.CheckpointsReached;
+            var errorMultiplier = 1 - Mathf.InverseLerp(0, 1000, fullAiVehicleController.CheckpointsReached); // After 1000 checkpoints, error is not considered
+            var error = fullAiVehicleController.Error * errorMultiplier;
+            var penality = fitnessPenalty;
+
+            return (checkpoints * 10) - (error / 10) - penality;
         }
     }
 }
